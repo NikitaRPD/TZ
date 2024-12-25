@@ -1,0 +1,18 @@
+services:
+  postgres:
+    image: postgres
+    container_name: postgres
+    command: postgres -c 'max_connections=2000' -c 'jit=off'
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    volumes:
+      - ./deployment/.pgdata:/var/lib/postgresql/data
+
+volumes:
+  docker:
+    driver: local
+  postgres:

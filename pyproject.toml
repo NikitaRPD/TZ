@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "repay-tz"
+version = "0.1.0"
+description = ""
+authors = ["Repay Tean <repay@repay.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+sqlalchemy = "^2.0.36"
+fastapi = "^0.115.6"
+pydantic-settings = "^2.7.0"
+pyyaml = "^6.0.2"
+uvicorn = "^0.34.0"
+alembic = "^1.14.0"
+asyncpg = "^0.30.0"
+greenlet = "^3.1.1"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.4"
+ruff = "^0.8.4"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
