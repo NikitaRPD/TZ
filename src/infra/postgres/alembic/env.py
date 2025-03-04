@@ -21,7 +21,7 @@ config.set_main_option(
 )
 
 target_metadata = Base.metadata
-from src.infra.postgres.models import *
+from src.infra.postgres.models import *  # noqa: E402, F403
 
 
 def run_migrations_offline() -> None:

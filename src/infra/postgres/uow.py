@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.infra.postgres.pg import get_db
 from src.infra.postgres.storage.author import AuthorStorage
-# from src.infra.postgres.storage.book import BookStorage
+from src.infra.postgres.storage.book import BookStorage
 
 
 class PostgresUnitOfWork:
@@ -16,7 +16,7 @@ class PostgresUnitOfWork:
     def __init__(self, db: AsyncSession) -> None:
         self.db = db
         self.author = AuthorStorage(self.db)
-        # self.book = BookStorage(self.db)
+        self.book = BookStorage(self.db)
 
 
 async def get_uow() -> AsyncIterator[PostgresUnitOfWork]:

@@ -9,3 +9,10 @@ class BookBase(BaseModel):
     publication_year: int
     pages: int
     genre: str
+
+
+class BookCreateRequest(BookBase):
+    ...
+
+class BookResponse(BookBase):
+    id: UUID

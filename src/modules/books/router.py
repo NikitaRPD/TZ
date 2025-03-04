@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
-from src.controllers.books.controller import BookControllerDep
-from src.schemas.books.read import BookResponse
+from src.modules.books.controller import BookControllerDep
+from src.modules.books.schemas import BookResponse
 
 router = APIRouter(prefix="/books")
 
@@ -12,5 +12,5 @@ async def get(controller: BookControllerDep) -> list[BookResponse]:
 
 
 @router.post("/")
-async def post() -> BookResponse:
-    pass
+async def post(controller: BookControllerDep) -> BookResponse:
+    return await controller.create_book()
