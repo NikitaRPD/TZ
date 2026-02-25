@@ -1,6 +1,6 @@
 services:
   postgres:
-    image: postgres
+    image: postgres:17
     container_name: postgres
     command: postgres -c 'max_connections=2000' -c 'jit=off'
     ports:
