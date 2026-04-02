@@ -1,18 +1,61 @@
 services:
-  postgres:
+  tz-postgres:
     image: postgres:17
-    container_name: postgres
+    container_name: tz-postgres
     command: postgres -c 'max_connections=2000' -c 'jit=off'
     ports:
-      - "5432:5432"
+      - "5499:5432"
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: postgres
+      POSTGRES_USER: tz_user
+      POSTGRES_PASSWORD: tz_password
+      POSTGRES_DB: tz_db
     volumes:
-      - ./deployment/.pgdata:/var/lib/postgresql/data
+      - tz-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tz_user"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  tz-app:
+    build: .
+    container_name: tz-app
+    ports:
+      - "8099:8000"
+    environment:
+      POSTGRES_HOST: tz-postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: tz_user
+      POSTGRES_PASSWORD: tz_password
+      POSTGRES_DB: tz_db
+    depends_on:
+      tz-postgres:
+        condition: service_healthy
+    command: >
+      sh -c "uv run alembic upgrade head && uv run uvicorn src.main:app --host 0.0.0.0 --port 8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/docs')"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 15s
+
+  tz-tests:
+    build: .
+    environment:
+      APP_URL: http://tz-app:8000
+      POSTGRES_HOST: tz-postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: tz_user
+      POSTGRES_PASSWORD: tz_password
+      POSTGRES_DB: tz_db
+    depends_on:
+      tz-app:
+        condition: service_healthy
+    command: uv run pytest tests/ -v
+    profiles:
+      - test
 
 volumes:
-  docker:
+  tz-pgdata:
     driver: local
-  postgres:

@@ -1,6 +1,6 @@
 from asyncio import current_task
+from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
-from typing import AsyncIterator
 
 from sqlalchemy import AsyncAdaptedQueuePool
 from sqlalchemy.ext.asyncio import (
@@ -17,7 +17,7 @@ connect_args = {
     "server_settings": {
         "jit": "off",
         "statement_timeout": "30000",
-    }
+    },
 }
 
 engine: AsyncEngine = create_async_engine(

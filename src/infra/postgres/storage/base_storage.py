@@ -1,4 +1,4 @@
-from typing import Generic, Type, TypeVar
+from typing import Generic, TypeVar
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -10,7 +10,7 @@ ModelT = TypeVar("ModelT", bound=Base)
 class PostgresStorage(Generic[ModelT]):
     """Same as Repository"""
 
-    model_cls: Type[ModelT]
+    model_cls: type[ModelT]
 
     def __init__(self, db: AsyncSession) -> None:
         self._db: AsyncSession = db
