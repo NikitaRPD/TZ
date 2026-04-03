@@ -58,31 +58,23 @@ async def test_create_book_with_multiple_authors(client: AsyncClient):
     assert AUTHOR_2 in data["authors"]
 
 
-async def test_create_book_skips_nonexistent_authors(client: AsyncClient):
-    """Из 3 авторов в запросе только 2 есть в БД — книга создаётся с двумя."""
+async def test_create_book_with_nonexistent_author_returns_error(client: AsyncClient):
+    """Если передан несуществующий автор — сервис должен вернуть ошибку."""
     payload = {
         "title": "Book with missing author",
-        "authors": [AUTHOR_1, AUTHOR_2, AUTHOR_NONEXISTENT],
+        "authors": [AUTHOR_NONEXISTENT],
         "genre": "Test",
     }
     response = await client.post("/api/books/", json=payload)
-    assert response.status_code == 200
-
-    data = response.json()
-    assert len(data["authors"]) == 2
-    assert AUTHOR_NONEXISTENT not in data["authors"]
+    assert response.status_code == 404
 
 
-async def test_create_book_deduplicates_authors(client: AsyncClient):
-    """Дублирующиеся авторы в запросе — книга создаётся с одним уникальным автором."""
+async def test_create_book_with_duplicate_authors_returns_error(client: AsyncClient):
+    """Если в запросе дублирующиеся авторы — сервис должен вернуть ошибку."""
     payload = {
         "title": "Book with duplicate authors",
         "authors": [AUTHOR_1, AUTHOR_1],
         "genre": "Test",
     }
     response = await client.post("/api/books/", json=payload)
-    assert response.status_code == 200
-
-    data = response.json()
-    assert len(data["authors"]) == 1
-    assert AUTHOR_1 in data["authors"]
+    assert response.status_code == 422
