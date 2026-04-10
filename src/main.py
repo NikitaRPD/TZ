@@ -2,7 +2,7 @@ import logging
 
 from fastapi import APIRouter, FastAPI
 
-from src.modules.books.router import router as books_router
+from src.modules.books.controllers import router as books_router
 
 main_router = APIRouter(prefix="/api")
 main_router.include_router(books_router)

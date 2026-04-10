@@ -1,6 +1,5 @@
 from asyncio import current_task
 from collections.abc import AsyncIterator
-from contextlib import asynccontextmanager
 
 from sqlalchemy import AsyncAdaptedQueuePool
 from sqlalchemy.ext.asyncio import (
@@ -32,21 +31,17 @@ engine: AsyncEngine = create_async_engine(
     pool_recycle=3600,
 )
 
-async_session_factory = async_sessionmaker(engine, expire_on_commit=False, class_=AsyncSession)
+async_session_factory = async_sessionmaker(engine, autoflush=False, expire_on_commit=False, class_=AsyncSession)
 session: async_scoped_session[AsyncSession] = async_scoped_session(
     session_factory=async_session_factory,
     scopefunc=current_task,
 )
 
 
-@asynccontextmanager
 async def get_db() -> AsyncIterator[AsyncSession]:
     async with session() as db:
         try:
             yield db
-            await db.commit()
-        except Exception as error:
-            await db.rollback()
-            raise error
         finally:
+            await db.rollback()
             await db.close()
