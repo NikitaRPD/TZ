@@ -42,6 +42,7 @@ docker-compose up -d
 ### 2. Создать и применить миграции (после реализации моделей):
 
 ```bash
+docker-compose run --rm tz-app uv run alembic upgrade head
 docker-compose run --rm tz-app uv run alembic revision --autogenerate -m "books"
 docker-compose run --rm tz-app uv run alembic upgrade head
 ```
