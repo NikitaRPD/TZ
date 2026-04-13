@@ -1,5 +1,6 @@
 from typing import TYPE_CHECKING
 from uuid import UUID
+
 from sqlalchemy import UUID as PGUUID, text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 

@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 
 @dataclass(kw_only=True)
-class AppException(Exception):
+class AppError(Exception):
     message: str
 
     def __str__(self) -> str:
@@ -10,5 +10,5 @@ class AppException(Exception):
 
 
 @dataclass(kw_only=True)
-class NotFoundException(AppException):
+class NotFoundError(AppError):
     message: str = "Not found"

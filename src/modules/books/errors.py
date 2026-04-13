@@ -1,10 +1,11 @@
 from dataclasses import dataclass, field
 from uuid import UUID
-from src.modules.base.exceptions import NotFoundException
+
+from src.modules.base.errors import NotFoundError
 
 
 @dataclass(kw_only=True)
-class AuthorsNotFoundException(NotFoundException):
+class AuthorsNotFoundError(NotFoundError):
     missing_ids: list[UUID] = field(default_factory=list)
     message: str = "Authors not found"
 

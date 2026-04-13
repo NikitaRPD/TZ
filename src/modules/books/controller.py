@@ -1,12 +1,13 @@
-from typing import Annotated, AsyncIterator
+from collections.abc import AsyncIterator
+from typing import Annotated
 
 from fastapi import Depends
 
 from src.infra.postgres.uow import PostgresUnitOfWorkDep
 from src.modules.base.controller import BaseController
-from src.modules.books.schemas import BookResponse
-from src.modules.books.schemas import BookCreateRequest
-from src.modules.books.exceptions import AuthorsNotFoundException
+from src.modules.books.errors import AuthorsNotFoundError
+from src.modules.books.schemas import BookCreateRequest, BookResponse
+
 
 class BookController(BaseController):
     async def read_books(self) -> list[BookResponse]:
@@ -26,7 +27,7 @@ class BookController(BaseController):
 
         if len(authors) != len(data.authors):
             found_ids = {a.id for a in authors}
-            raise AuthorsNotFoundException(
+            raise AuthorsNotFoundError(
                 missing_ids=[i for i in data.authors if i not in found_ids]
             )
 
