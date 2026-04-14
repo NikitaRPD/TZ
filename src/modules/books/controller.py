@@ -23,7 +23,7 @@ class BookController(BaseController):
         ]
 
     async def create_book(self, data: BookCreateRequest) -> BookResponse:
-        authors = await self.uow.author.get_by_ids(data.authors)
+        authors = await self.uow.author.get_by_ids_for_update(data.authors)
 
         if len(authors) != len(data.authors):
             found_ids = {a.id for a in authors}
