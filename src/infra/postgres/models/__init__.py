@@ -1,7 +1,8 @@
 from .author import Author
-
-# TODO import books
+from .book import Book
+from .book_author import BookAuthor
 
 __all__ = [
     "Author",
+    "Book"
 ]
